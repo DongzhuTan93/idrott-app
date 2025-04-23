@@ -12,7 +12,6 @@ class AuthCard extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final isDesktop = screenWidth > 1024;
     final isTablet = screenWidth > 640 && screenWidth <= 1024;
-    final isSmallScreen = screenWidth <= 640;
 
     // Scale width based on screen size
     double containerWidth;
@@ -32,7 +31,7 @@ class AuthCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withAlpha(26),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
