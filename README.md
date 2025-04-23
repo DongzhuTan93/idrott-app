@@ -8,7 +8,7 @@ This project focuses on developing a system for measuring strength using the Iso
 
 ## Application Home Page
 
-![IMTP App Screenshot](image/imtp-app.png)
+![IMTP App Home Page](image/Imtp-app.png)
 
 ## System Components
 
