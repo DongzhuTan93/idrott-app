@@ -6,6 +6,10 @@ A comprehensive system for measuring strength using the Isometric Mid-thigh Pull
 
 This project focuses on developing a system for measuring strength using the Isometric Mid-thigh Pull (IMTP) exercise. A load cell sensor is used to capture the force exerted during the pull. This data is then processed by a microcontroller, transmitted wirelessly, stored securely in a database, and finally accessed and visualized by users through a web or mobile application.
 
+## Application Home Page
+
+![IMTP App Screenshot](image/imtp-app.png)
+
 ## System Components
 
 ### Hardware Development
