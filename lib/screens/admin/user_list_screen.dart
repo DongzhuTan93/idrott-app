@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/user.dart';
+import '../../services/users_data.dart';
+import 'dart:developer' as developer;
 
 class UserListScreen extends StatefulWidget {
   const UserListScreen({super.key});
@@ -18,12 +20,20 @@ class _UserListScreenState extends State<UserListScreen> {
     _loadUsers();
   }
 
-  Future<void> _loadUsers() async {
-    // Start with an empty list - users will be added through registration
-    final users = <User>[];
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Refresh data when screen becomes visible
+    _loadUsers();
+  }
 
-    // In a real app, this would fetch users from an API or database
-    // but exclude admin users from the list
+  Future<void> _loadUsers() async {
+    developer.log(
+      'Loading users: ${UsersData.getAllUsers().length} total, ${UsersData.getNonAdminUsers().length} non-admin',
+      name: 'UserListScreen',
+    );
+    // Get users from the global list
+    final users = UsersData.getNonAdminUsers();
 
     setState(() {
       _users = users;
@@ -72,38 +82,6 @@ class _UserListScreenState extends State<UserListScreen> {
     );
   }
 
-  void _deleteUser(User user) {
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            title: const Text('Delete User'),
-            content: Text('Are you sure you want to delete ${user.username}?'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('CANCEL'),
-              ),
-              TextButton(
-                onPressed: () {
-                  // TODO: In a real app, this would call an API or database
-                  setState(() {
-                    _users.removeWhere((u) => u.id == user.id);
-                  });
-                  Navigator.of(context).pop();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('${user.username} has been deleted'),
-                    ),
-                  );
-                },
-                style: TextButton.styleFrom(foregroundColor: Colors.red),
-                child: const Text('DELETE'),
-              ),
-            ],
-          ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,6 +94,10 @@ class _UserListScreenState extends State<UserListScreen> {
       body:
           _isLoading
               ? const Center(child: CircularProgressIndicator())
+              : _users.isEmpty
+              ? const Center(
+                child: Text('No users found. Add a new user to get started.'),
+              )
               : ListView.builder(
                 itemCount: _users.length,
                 itemBuilder: (context, index) {
@@ -149,10 +131,7 @@ class _UserListScreenState extends State<UserListScreen> {
                               ),
                               backgroundColor: Color(0xFF007340),
                             ),
-                          IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () => _deleteUser(user),
-                          ),
+               
                         ],
                       ),
                       onTap: () => _showUserDetails(user),

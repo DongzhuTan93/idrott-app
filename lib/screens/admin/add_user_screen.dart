@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:developer' as developer;
 import '../../models/user.dart';
+import '../../services/users_data.dart';
 
 class AddUserScreen extends StatefulWidget {
   const AddUserScreen({super.key});
@@ -46,6 +47,9 @@ class _AddUserScreenState extends State<AddUserScreen> {
         isAdmin: false, // Regular users are not admins
         createdAt: DateTime.now(),
       );
+
+      // Add the user to the global list
+      UsersData.addUser(newUser);
 
       // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
