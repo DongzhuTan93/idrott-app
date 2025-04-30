@@ -1,13 +1,35 @@
+import 'dart:io' as io;
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'screens/auth_screen.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/register_screen.dart';
 import 'screens/admin/admin_dashboard.dart';
 import 'screens/admin/add_user_screen.dart';
 import 'screens/admin/user_list_screen.dart';
+import 'screens/iot_dashboard.dart';
+import 'services/mqtt_service.dart';
+
+// Custom HTTP overrides to handle certificate issues - only for native platforms
+class MyHttpOverrides extends io.HttpOverrides {
+  @override
+  io.HttpClient createHttpClient(io.SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (io.X509Certificate cert, String host, int port) => true;
+  }
+}
 
 void main() {
-  runApp(const IdrrottApp());
+  // Set HTTP overrides for all mobile platforms
+  io.HttpOverrides.global = MyHttpOverrides();
+
+  runApp(
+    MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => MqttService())],
+      child: const IdrrottApp(),
+    ),
+  );
 }
 
 class IdrrottApp extends StatelessWidget {
@@ -30,6 +52,7 @@ class IdrrottApp extends StatelessWidget {
         '/admin': (context) => const AdminDashboard(),
         '/admin/add-user': (context) => const AddUserScreen(),
         '/admin/users': (context) => const UserListScreen(),
+        '/iot-dashboard': (context) => const IoTDashboard(),
         // Setting route can be added when implemented
         // '/admin/settings': (context) => const SettingsScreen(),
       },

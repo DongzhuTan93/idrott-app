@@ -98,6 +98,16 @@ class _AdminDashboardState extends State<AdminDashboard> {
                                       '/admin/settings',
                                     ),
                               ),
+                              const SizedBox(height: 30),
+                              PrimaryButton(
+                                text: 'RUN TEST',
+                                width: double.infinity,
+                                onPressed:
+                                    () => Navigator.pushNamed(
+                                      context,
+                                      '/iot-dashboard',
+                                    ),
+                              ),
 
                               const Spacer(),
                             ],

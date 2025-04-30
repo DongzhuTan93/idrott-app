@@ -1,14 +1,23 @@
-# IMTP Strength Measurement System
+# IMTP Strength Measurement Mobile App
 
-A comprehensive system for measuring strength using the Isometric Mid-thigh Pull (IMTP) exercise. This project combines hardware sensors, microcontroller firmware, and a Flutter mobile/web application to capture, process, store, and visualize strength data.
+A comprehensive mobile application for measuring strength using the Isometric Mid-thigh Pull (IMTP) exercise. This project combines hardware sensors, microcontroller firmware, and a Flutter mobile application to capture, process, store, and visualize strength data.
 
 ## Project Overview
 
-This project focuses on developing a system for measuring strength using the Isometric Mid-thigh Pull (IMTP) exercise. A load cell sensor is used to capture the force exerted during the pull. This data is then processed by a microcontroller, transmitted wirelessly, stored securely in a database, and finally accessed and visualized by users through a web or mobile application.
+This project focuses on developing a mobile app for measuring strength using the Isometric Mid-thigh Pull (IMTP) exercise. A load cell sensor is used to capture the force exerted during the pull. This data is then processed by a microcontroller, transmitted wirelessly, stored securely in a database, and finally accessed and visualized by users through the mobile application.
 
 ## Application Home Page
 
 ![IMTP App Home Page](image/Imtp-app.png)
+
+## Key Features
+
+- **Real-time IoT Data Monitoring**: View sensor data from connected devices in real-time
+- **Historical Data Analysis**: Visualize performance trends over time
+- **Bluetooth Device Management**: Connect directly to nearby sensors
+- **User Authentication**: Secure login and account management
+- **Administrative Tools**: User management interface for coaches/administrators
+- **MQTT Integration**: Reliable communication protocol for IoT devices
 
 ## System Components
 
@@ -18,7 +27,7 @@ This project focuses on developing a system for measuring strength using the Iso
 - **Interface/Signal Amplifier (HX711)**: Interfaces with the load cell and amplifies its output signal, making it suitable for the microcontroller to read.
 - **Microcontroller (ESP32)**: Central processing unit that receives the amplified signal, pre-processes the data, and handles wireless communication.
 - **Serial Peripheral Interface (SPI)**: Communication protocol used for data transfer between the amplifier and the microcontroller.
-- **Wireless Communication (WiFi/Bluetooth)**: The microcontroller transmits the processed data to the cloud or a local server.
+- **Wireless Communication (WiFi/Bluetooth)**: The microcontroller transmits the processed data to the mobile app.
 
 ### Firmware Development
 
@@ -29,15 +38,30 @@ This project focuses on developing a system for measuring strength using the Iso
 ### Server (Backend) Development
 
 - **Database Management**: Securely storing strength data received from the microcontroller.
-- **API Development**: Creating interfaces that allow the web and mobile applications to access the data.
+- **API Development**: Creating interfaces that allow the mobile application to access the data.
 - **MQTT Broker**: Handling the incoming data stream from microcontrollers, especially if scaling to multiple users or devices.
 
-### App (Web/Mobile) Development
+### Mobile App Development
 
 - **User Interface (UI) Design**: Creating an intuitive and user-friendly interface.
 - **Data Visualization**: Implementing features to visualize strength data over time (graphs, charts).
 - **User Authentication and Authorization**: Secure user accounts and login systems.
 - **Data Retrieval and Display**: Fetching data from backend APIs and displaying it to users.
+- **Bluetooth Connectivity**: Directly connecting to hardware sensors when needed.
+
+## IoT Integration
+
+The app uses MQTT (Message Queuing Telemetry Transport) protocol for communicating with IoT devices. This lightweight protocol is ideal for constrained devices and low-bandwidth, high-latency networks, making it perfect for IoT applications.
+
+### IoT Dashboard
+
+The IoT Dashboard screen provides:
+- Real-time temperature and humidity readings
+- Historical data visualized through charts
+- Connection status monitoring
+- Device information display
+
+The dashboard connects to an MQTT broker at `cscloud7-148.lnu.se` and subscribes to the `data/sht30` topic to receive sensor data.
 
 ## Project Structure
 
@@ -61,7 +85,12 @@ lib/
   │   │   ├── admin_dashboard.dart
   │   │   ├── add_user_screen.dart
   │   │   └── user_list_screen.dart
+  │   ├── iot_dashboard.dart  # IoT device monitoring and data visualization
   │   └── auth_screen.dart
+  │
+  ├── services/       # Business logic and data services
+  │   ├── mqtt_service.dart  # MQTT client for IoT communication
+  │   └── users_data.dart    # User management service
   │
   ├── theme/          # App theming/Styling definitions (colors, text styles)
   │   ├── colors.dart
@@ -76,9 +105,41 @@ lib/
 
 - Flutter SDK (version 3.0.0 or higher)
 - Dart SDK (version 2.17.0 or higher)
-- Chrome browser for web testing
+- Android Studio or Xcode for mobile device emulation/testing
+- Physical Android or iOS device for testing (recommended for Bluetooth functionality)
 - ESP32 microcontroller (for hardware integration)
 - Load cell sensor and amplifier
+
+### Connecting a Physical Device
+
+#### Android Devices
+
+1. Enable Developer options on your device:
+   - Go to **Settings** > **About phone** (location may vary by manufacturer)
+   - Tap **Build number** 7 times until you see "You are now a developer!"
+
+2. Enable USB debugging:
+   - Go to **Settings** > **Developer options** (may be under Additional Settings on some devices)
+   - Turn on **USB debugging**
+   - On some devices, you may need to enable **Install via USB** option
+   - Some manufacturer UIs (like MIUI on Xiaomi) may require disabling UI optimizations for development
+
+3. Connect your device via USB cable to your computer
+
+4. If prompted on your device, allow USB debugging
+
+5. For devices that show installation errors like "INSTALL_FAILED_USER_RESTRICTED":
+   - Check your device's permission settings
+   - Look for **Install via USB** options in **Settings** > **Apps** > **Permissions**
+   - Different manufacturers place these settings in various locations
+   - Check manufacturer-specific documentation if needed
+
+#### iOS Devices
+
+1. Connect your iOS device to your Mac
+2. Open Xcode and navigate to Window > Devices and Simulators
+3. Select your device and make sure it's recognized
+4. In your Flutter project, ensure you have a valid iOS Developer account set up in Xcode
 
 ### Running the App
 
@@ -87,25 +148,73 @@ lib/
    cd idrott_app
    ```
 
-2. Get dependencies
+2. Clean the project (recommended when switching branches or when facing build issues)
+   ```
+   flutter clean
+   ```
+
+3. Get dependencies
    ```
    flutter pub get
    ```
 
-3. Run the app with a fixed port (for convenience)
+4. Find connected devices
    ```
-   flutter run -d chrome --web-port=8080
+   flutter devices
+   ```
+   This will show a list of connected devices with their IDs, for example:
+   ```
+   Pixel 6 (mobile)               • a1b2c3d4              • android-arm64 • Android 12 (API 31)
+   Samsung Galaxy S22 (mobile)    • ef5678gh              • android-arm64 • Android 12 (API 31)
+   iPhone 13 Pro (mobile)         • 00001111-AAAA2222     • ios           • iOS 15.5
+   macOS (desktop)                • macos                 • darwin-arm64  • macOS 12.4
    ```
 
-4. Open your browser and go to:
+5. Run the app on a connected device by ID 
    ```
-   http://localhost:8080
+   flutter run -d <device_id>
    ```
+   For example:
+   ```
+   flutter run -d a1b2c3d4    (Pixel 6 (mobile))
+   ```
+
+6. Or simply run on the default connected device
+   ```
+   flutter run
+   ```
+
+### Troubleshooting Device Connection
+
+If your device is not showing up when running `flutter devices`:
+
+1. Ensure USB debugging is enabled
+2. Try disconnecting and reconnecting the USB cable
+3. Try a different USB cable or port
+4. Run `flutter doctor` to diagnose issues
+5. For Android, install appropriate USB drivers for your device
+6. Restart both your computer and device
+
+### Setting Up a Development Environment in Cursor
+
+1. Open the project in Cursor
+2. Use the integrated terminal to run Flutter commands
+3. Edit code in Cursor's editor
+4. Debug and run the application directly from Cursor
+5. No need for Android Studio for Flutter development
+
+## Mobile-Specific Considerations
+
+- **Bluetooth Connection**: The app uses flutter_blue_plus for BLE connections to hardware
+- **Local Storage**: Mobile-optimized data storage for offline functionality
+- **Mobile UI/UX**: Interface designed specifically for handheld touch devices
+- **Battery Optimization**: Code designed to minimize battery usage during Bluetooth operations
+- **Native Look and Feel**: Following Material Design (Android) and Cupertino (iOS) design guidelines
 
 ## Development Roadmap
 
 - [ ] Complete hardware integration with ESP32 and load cell
-- [ ] Implement MQTT communication between hardware and server
+- [ ] Implement MQTT communication between hardware and mobile app
 - [ ] Develop data visualization features
 - [ ] Implement user authentication and profiles
 - [ ] Add data export functionality

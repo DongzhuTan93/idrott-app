@@ -27,15 +27,26 @@ environment:
 # dependencies can be manually updated by changing the version numbers below to
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
+
+# This is a mobile-only application - no web support included
 dependencies:
   flutter:
     sdk: flutter
+  flutter_blue_plus: ^1.31.15
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   google_fonts: ^5.1.0
-  flutter_blue_plus: ^1.31.15
+  mqtt_client: ^10.0.0
+  http: ^1.1.0
+  intl: ^0.19.0
+  fl_chart: ^0.66.0
+  provider: ^6.1.1
+
+# Explicitly exclude web dependencies
+dependency_overrides:
+  flutter_blue_plus_web: 3.0.0
 
 dev_dependencies:
   flutter_test:
