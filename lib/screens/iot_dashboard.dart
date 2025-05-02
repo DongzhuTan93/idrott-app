@@ -80,63 +80,62 @@ class _IoTDashboardState extends State<IoTDashboard> {
         ],
       ),
       body: SafeArea(
-        child: Padding(
+        child: ListView(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Sensor Readings',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+          children: [
+            const Text(
+              'Sensor Readings',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
-              const SizedBox(height: 16),
+            ),
+            const SizedBox(height: 16),
 
-              // Current Readings
-              Consumer<MqttService>(
-                builder: (context, mqttService, child) {
-                  final temperature = mqttService.getLatestTemperature();
-                  final humidity = mqttService.getLatestHumidity();
+            // Current Readings
+            Consumer<MqttService>(
+              builder: (context, mqttService, child) {
+                final temperature = mqttService.getLatestTemperature();
+                final humidity = mqttService.getLatestHumidity();
 
-                  return Row(
-                    children: [
-                      Expanded(
-                        child: _buildSensorCard(
-                          'Temperature',
-                          temperature != null ? '$temperature°C' : 'N/A',
-                          Icons.thermostat,
-                        ),
+                return Row(
+                  children: [
+                    Expanded(
+                      child: _buildSensorCard(
+                        'Temperature',
+                        temperature != null ? '$temperature°C' : 'N/A',
+                        Icons.thermostat,
                       ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: _buildSensorCard(
-                          'Humidity',
-                          humidity != null ? '$humidity%' : 'N/A',
-                          Icons.water_drop,
-                        ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: _buildSensorCard(
+                        'Humidity',
+                        humidity != null ? '$humidity%' : 'N/A',
+                        Icons.water_drop,
                       ),
-                    ],
-                  );
-                },
-              ),
+                    ),
+                  ],
+                );
+              },
+            ),
 
-              const SizedBox(height: 24),
-              const Text(
-                'Temperature History',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+            const SizedBox(height: 24),
+            const Text(
+              'Temperature History',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
-              const SizedBox(height: 8),
+            ),
+            const SizedBox(height: 8),
 
-              // Temperature Chart
-              Container(
-                height: 200,
+            // Temperature Chart
+            SizedBox(
+              height: 200,
+              child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: AppColors.cardBackground,
@@ -160,21 +159,23 @@ class _IoTDashboardState extends State<IoTDashboard> {
                   },
                 ),
               ),
+            ),
 
-              const SizedBox(height: 24),
-              const Text(
-                'Humidity History',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+            const SizedBox(height: 24),
+            const Text(
+              'Humidity History',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
-              const SizedBox(height: 8),
+            ),
+            const SizedBox(height: 8),
 
-              // Humidity Chart
-              Container(
-                height: 200,
+            // Humidity Chart
+            SizedBox(
+              height: 200,
+              child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: AppColors.cardBackground,
@@ -195,10 +196,15 @@ class _IoTDashboardState extends State<IoTDashboard> {
                   },
                 ),
               ),
+            ),
 
-              // Debug Section
-              const SizedBox(height: 24),
-              ExpansionTile(
+            // Debug Section
+            const SizedBox(height: 24),
+            Theme(
+              data: Theme.of(
+                context,
+              ).copyWith(dividerColor: Colors.transparent),
+              child: ExpansionTile(
                 collapsedIconColor: Colors.white,
                 iconColor: Colors.white,
                 title: const Text(
@@ -264,8 +270,8 @@ class _IoTDashboardState extends State<IoTDashboard> {
                   ),
                 ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -280,14 +286,19 @@ class _IoTDashboardState extends State<IoTDashboard> {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(icon, color: Colors.white),
               const SizedBox(width: 8),
-              Text(
-                title,
-                style: const TextStyle(color: Colors.white, fontSize: 16),
+              Expanded(
+                child: Text(
+                  title,
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ],
           ),
@@ -299,6 +310,7 @@ class _IoTDashboardState extends State<IoTDashboard> {
               fontSize: 24,
               fontWeight: FontWeight.bold,
             ),
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
