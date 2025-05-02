@@ -17,13 +17,19 @@ class MqttService with ChangeNotifier {
   bool _isConnected = false;
   final List<Map<String, dynamic>> _sensorData = [];
   String _connectionStatus = "Not connected";
+  bool _isLoading = false;
 
   // Getters
   bool get isConnected => _isConnected;
   List<Map<String, dynamic>> get sensorData => _sensorData;
   String get connectionStatus => _connectionStatus;
+  bool get isLoading => _isLoading;
 
   Future<void> initializeMqtt() async {
+    _isLoading = true;
+    _connectionStatus = "Connecting...";
+    notifyListeners();
+
     debugPrint('Initializing MQTT connection...');
 
     try {
@@ -53,6 +59,7 @@ class MqttService with ChangeNotifier {
       if (_client!.connectionStatus!.state == MqttConnectionState.connected) {
         debugPrint('MQTT client connected');
         _isConnected = true;
+        _isLoading = false;
         _connectionStatus = "Connected";
         _subscribeToTopic();
         notifyListeners();
@@ -82,11 +89,15 @@ class MqttService with ChangeNotifier {
 
       notifyListeners();
     }
+
+    _isLoading = false;
+    notifyListeners();
   }
 
   void _onConnected() {
     debugPrint('Connected to MQTT broker');
     _isConnected = true;
+    _isLoading = false;
     _connectionStatus = "Connected";
     _subscribeToTopic();
     notifyListeners();

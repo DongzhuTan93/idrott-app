@@ -98,6 +98,30 @@ class _IoTDashboardState extends State<IoTDashboard> {
               builder: (context, mqttService, child) {
                 final temperature = mqttService.getLatestTemperature();
                 final humidity = mqttService.getLatestHumidity();
+                final isLoading = mqttService.isLoading;
+                final isConnected = mqttService.isConnected;
+                final hasData = mqttService.sensorData.isNotEmpty;
+
+                // Show loading indicators when connecting or waiting for first data
+                if (isLoading || (isConnected && !hasData)) {
+                  return Row(
+                    children: [
+                      Expanded(
+                        child: _buildLoadingSensorCard(
+                          'Temperature',
+                          Icons.thermostat,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: _buildLoadingSensorCard(
+                          'Humidity',
+                          Icons.water_drop,
+                        ),
+                      ),
+                    ],
+                  );
+                }
 
                 return Row(
                   children: [
@@ -145,6 +169,30 @@ class _IoTDashboardState extends State<IoTDashboard> {
                   builder: (context, mqttService, child) {
                     final temperatureData =
                         mqttService.getTemperatureReadings();
+                    final isLoading = mqttService.isLoading;
+                    final isConnected = mqttService.isConnected;
+
+                    // Show loading indicator when connecting or waiting for data
+                    if (isLoading || (isConnected && temperatureData.isEmpty)) {
+                      return const Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.orange,
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              'Loading temperature data...',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+
                     if (temperatureData.isEmpty) {
                       return const Center(
                         child: Text(
@@ -153,6 +201,7 @@ class _IoTDashboardState extends State<IoTDashboard> {
                         ),
                       );
                     }
+
                     return LineChart(
                       _buildTemperatureLineChart(temperatureData),
                     );
@@ -184,6 +233,30 @@ class _IoTDashboardState extends State<IoTDashboard> {
                 child: Consumer<MqttService>(
                   builder: (context, mqttService, child) {
                     final humidityData = mqttService.getHumidityReadings();
+                    final isLoading = mqttService.isLoading;
+                    final isConnected = mqttService.isConnected;
+
+                    // Show loading indicator when connecting or waiting for data
+                    if (isLoading || (isConnected && humidityData.isEmpty)) {
+                      return const Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.blue,
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              'Loading humidity data...',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+
                     if (humidityData.isEmpty) {
                       return const Center(
                         child: Text(
@@ -192,6 +265,7 @@ class _IoTDashboardState extends State<IoTDashboard> {
                         ),
                       );
                     }
+
                     return LineChart(_buildHumidityLineChart(humidityData));
                   },
                 ),
@@ -311,6 +385,47 @@ class _IoTDashboardState extends State<IoTDashboard> {
               fontWeight: FontWeight.bold,
             ),
             overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLoadingSensorCard(String title, IconData icon) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.cardBackground,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: Colors.white),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  title,
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          const Center(
+            child: SizedBox(
+              height: 24,
+              width: 24,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            ),
           ),
         ],
       ),
