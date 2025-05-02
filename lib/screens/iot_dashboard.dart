@@ -4,7 +4,6 @@ import 'package:fl_chart/fl_chart.dart';
 import '../services/mqtt_service.dart';
 import '../theme/colors.dart';
 
-
 class IoTDashboard extends StatefulWidget {
   const IoTDashboard({super.key});
 
@@ -107,9 +106,7 @@ class _IoTDashboardState extends State<IoTDashboard> {
                       Expanded(
                         child: _buildSensorCard(
                           'Temperature',
-                          temperature != null
-                              ? '${temperature.toStringAsFixed(1)}°C'
-                              : 'N/A',
+                          temperature != null ? '$temperature°C' : 'N/A',
                           Icons.thermostat,
                         ),
                       ),
@@ -117,9 +114,7 @@ class _IoTDashboardState extends State<IoTDashboard> {
                       Expanded(
                         child: _buildSensorCard(
                           'Humidity',
-                          humidity != null
-                              ? '${humidity.toStringAsFixed(1)}%'
-                              : 'N/A',
+                          humidity != null ? '$humidity%' : 'N/A',
                           Icons.water_drop,
                         ),
                       ),
