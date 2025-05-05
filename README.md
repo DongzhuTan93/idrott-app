@@ -112,7 +112,59 @@ lib/
 
 ### Connecting a Physical Device
 
-#### Android Devices
+There are two options for connecting your device for development:
+
+1. **Wireless Connection (WiFi)** - Allows for cable-free development
+2. **Wired Connection (USB)** - Traditional, reliable connection method
+
+Choose the method that best suits your needs.
+
+#### Option 1: Wireless Debugging (WiFi)
+
+For a cable-free development experience:
+
+1. First, connect your device via USB cable (required only for initial setup)
+   
+2. Enable Developer options and USB debugging as described in the Android section below
+   
+3. **Make sure your computer and phone are connected to the same WiFi network**
+   
+4. Put your Android device in TCP/IP mode:
+   ```
+   adb tcpip 5555
+   ```
+   
+5. Get your device's IP address:
+   ```
+   adb shell ip addr show wlan0 | grep "inet " | cut -d' ' -f6 | cut -d'/' -f1
+   ```
+   This will display an IP address like `192.168.1.138`
+   
+6. Connect to your device wirelessly:
+   ```
+   adb connect YOUR_DEVICE_IP:5555
+   ```
+   For example: `adb connect 192.168.1.138:5555`
+   
+7. Verify the connection:
+   ```
+   adb devices
+   ```
+   You should see your device listed with its IP address
+   
+8. Disconnect the USB cable and run your app:
+   ```
+   flutter run
+   ```
+
+**Important Notes:**
+- Your computer and phone **must** be on the same WiFi network for this to work
+- Different WiFi networks will not work, as they typically have separate subnets and firewalls
+- If you restart your development session, simply run `flutter run` again
+- If the IP address changes (different WiFi, router reboot, etc.), repeat steps 1-7
+- Bluetooth is not supported for Flutter debugging, only WiFi
+
+#### Option 2: Android Devices (USB Connection)
 
 1. Enable Developer options on your device:
    - Go to **Settings** > **About phone** (location may vary by manufacturer)
