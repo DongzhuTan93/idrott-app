@@ -23,7 +23,7 @@ This feature enables trainers and athletes to run specific tests tailored to the
 
 ### Feature Demo
 
-![Test Selection Demo](video/test-selection-demo.mp4)
+![Test Selection Demo](image/IMG_1539.MOV)
 
 ## Key Features
 
