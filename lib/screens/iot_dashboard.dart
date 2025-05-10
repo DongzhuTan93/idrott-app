@@ -306,7 +306,7 @@ class _IoTDashboardState extends State<IoTDashboard> {
                               style: const TextStyle(color: Colors.white),
                             ),
                             Text(
-                              'Topic: data/sht30',
+                              'Topic: data/1dv027',
                               style: const TextStyle(color: Colors.white),
                             ),
                             Text(
