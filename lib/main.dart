@@ -8,6 +8,9 @@ import 'screens/admin/admin_dashboard.dart';
 import 'screens/admin/add_user_screen.dart';
 import 'screens/admin/user_list_screen.dart';
 import 'screens/iot_dashboard.dart';
+import 'screens/add_user_success_screen.dart';
+import 'screens/user_profile_screen.dart';
+import 'screens/user_test_dashboard.dart';
 import 'services/mqtt_service.dart';
 
 // Custom HTTP overrides to handle certificate issues - only for native platforms
@@ -53,6 +56,10 @@ class IdrrottApp extends StatelessWidget {
         '/admin/add-user': (context) => const AddUserScreen(),
         '/admin/users': (context) => const UserListScreen(),
         '/iot-dashboard': (context) => const IoTDashboard(),
+        '/user-profile':
+            (context) => UserProfileScreen(
+              user: ModalRoute.of(context)!.settings.arguments as dynamic,
+            ),
         // Setting route can be added when implemented
         // '/admin/settings': (context) => const SettingsScreen(),
       },
