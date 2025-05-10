@@ -14,10 +14,10 @@ This project focuses on developing a mobile app for measuring strength using the
 
 - **Real-time IoT Data Monitoring**: View sensor data from connected devices in real-time
 - **Historical Data Analysis**: Visualize performance trends over time
-- **Bluetooth Device Management**: Connect directly to nearby sensors
 - **User Authentication**: Secure login and account management
 - **Administrative Tools**: User management interface for coaches/administrators
 - **MQTT Integration**: Reliable communication protocol for IoT devices
+- **Wireless Communication (WiFi)**: The microcontroller transmits the processed data to the mobile app.
 
 ## System Components
 
@@ -27,7 +27,10 @@ This project focuses on developing a mobile app for measuring strength using the
 - **Interface/Signal Amplifier (HX711)**: Interfaces with the load cell and amplifies its output signal, making it suitable for the microcontroller to read.
 - **Microcontroller (ESP32)**: Central processing unit that receives the amplified signal, pre-processes the data, and handles wireless communication.
 - **Serial Peripheral Interface (SPI)**: Communication protocol used for data transfer between the amplifier and the microcontroller.
-- **Wireless Communication (WiFi/Bluetooth)**: The microcontroller transmits the processed data to the mobile app.
+
+Below is a basic diagram illustrating the load cell setup:
+
+![Load Cell Basics](image/LoadCellBasics.png)
 
 ### Firmware Development
 
@@ -47,7 +50,6 @@ This project focuses on developing a mobile app for measuring strength using the
 - **Data Visualization**: Implementing features to visualize strength data over time (graphs, charts).
 - **User Authentication and Authorization**: Secure user accounts and login systems.
 - **Data Retrieval and Display**: Fetching data from backend APIs and displaying it to users.
-- **Bluetooth Connectivity**: Directly connecting to hardware sensors when needed.
 
 ## IoT Integration
 
@@ -61,7 +63,7 @@ The IoT Dashboard screen provides:
 - Connection status monitoring
 - Device information display
 
-The dashboard connects to an MQTT broker at `cscloud7-148.lnu.se` and subscribes to the `data/sht30` topic to receive sensor data.
+The dashboard connects to an MQTT broker to receive sensor data. For demonstration purposes (as seen in the `temp-humidity-sensor` branch), it can subscribe to a topic like `data/1dv027` for temperature and humidity. In the future, this will be adapted to subscribe to the relevant MQTT topics for real-time IMTP sensor data.
 
 ## Project Structure
 
@@ -106,9 +108,8 @@ lib/
 - Flutter SDK (version 3.0.0 or higher)
 - Dart SDK (version 2.17.0 or higher)
 - Android Studio or Xcode for mobile device emulation/testing
-- Physical Android or iOS device for testing (recommended for Bluetooth functionality)
+- Physical Android or iOS device for testing
 - ESP32 microcontroller (for hardware integration)
-- Load cell sensor and amplifier
 
 ### Connecting a Physical Device
 
@@ -257,10 +258,8 @@ If your device is not showing up when running `flutter devices`:
 
 ## Mobile-Specific Considerations
 
-- **Bluetooth Connection**: The app uses flutter_blue_plus for BLE connections to hardware
 - **Local Storage**: Mobile-optimized data storage for offline functionality
 - **Mobile UI/UX**: Interface designed specifically for handheld touch devices
-- **Battery Optimization**: Code designed to minimize battery usage during Bluetooth operations
 - **Native Look and Feel**: Following Material Design (Android) and Cupertino (iOS) design guidelines
 
 ## Development Roadmap
@@ -280,3 +279,18 @@ For help getting started with Flutter development, view the
 samples, guidance on mobile development, and a full API reference.
 
 For ESP32 development, refer to [ESP32 documentation](https://docs.espressif.com/projects/esp-idf/en/latest/).
+
+**Important Notes:**
+- Your computer and phone **must** be on the same WiFi network for this to work.
+- Different WiFi networks will not work, as they typically have separate subnets and firewalls.
+- **Re-establishing Connection**: You will need to connect your device via USB and repeat steps 1-8 if:
+    - You start a new development session.
+    - Your device's IP address changes (e.g., due to connecting to a new WiFi network or a router reboot).
+    - Your device or computer restarts.
+    - The ADB server restarts.
+- Once the wireless connection is active, you can disconnect the USB cable. If the connection remains stable (same WiFi, no restarts), you can simply use `flutter run` for subsequent builds in the same session.
+- If you restart your development session, simply run `flutter run` again
+- If the IP address changes (different WiFi, router reboot, etc.), repeat steps 1-7
+- Bluetooth is not supported for Flutter debugging; this setup uses WiFi only.
+
+#### Option 2: Android Devices (USB Connection)

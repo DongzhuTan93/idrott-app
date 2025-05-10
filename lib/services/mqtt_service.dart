@@ -11,7 +11,7 @@ class MqttService with ChangeNotifier {
   // Connection settings
   final String _clientId =
       'flutter_app_${DateTime.now().millisecondsSinceEpoch}';
-  final String _topic = 'data/sht30';
+  final String _topic = 'data/1dv027';
 
   // State variables
   bool _isConnected = false;
