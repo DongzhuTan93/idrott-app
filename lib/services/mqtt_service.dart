@@ -160,30 +160,60 @@ class MqttService with ChangeNotifier {
     }
   }
 
-  // Get latest temperature reading
-  double? getLatestTemperature() {
-    if (_sensorData.isEmpty) return null;
-    return _sensorData.last['temperature']?.toDouble();
-  }
-
-  // Get latest humidity reading
-  double? getLatestHumidity() {
-    if (_sensorData.isEmpty) return null;
-    return _sensorData.last['humidity']?.toDouble();
-  }
-
   // Get all temperature readings
   List<Map<String, dynamic>> getTemperatureReadings() {
     return _sensorData.map((data) {
-      return {'timestamp': data['timestamp'], 'value': data['temperature']};
+      try {
+        final temp = data['temperature'];
+        final value =
+            temp != null ? double.tryParse(temp.toString()) ?? 0.0 : 0.0;
+        return {'timestamp': data['timestamp'], 'value': value};
+      } catch (e) {
+        debugPrint('Error parsing temperature: $e');
+        return {'timestamp': data['timestamp'], 'value': 0.0};
+      }
     }).toList();
   }
 
   // Get all humidity readings
   List<Map<String, dynamic>> getHumidityReadings() {
     return _sensorData.map((data) {
-      return {'timestamp': data['timestamp'], 'value': data['humidity']};
+      try {
+        final humidity = data['humidity'];
+        final value =
+            humidity != null
+                ? double.tryParse(humidity.toString()) ?? 0.0
+                : 0.0;
+        return {'timestamp': data['timestamp'], 'value': value};
+      } catch (e) {
+        debugPrint('Error parsing humidity: $e');
+        return {'timestamp': data['timestamp'], 'value': 0.0};
+      }
     }).toList();
+  }
+
+  // Get latest temperature reading
+  double? getLatestTemperature() {
+    if (_sensorData.isEmpty) return null;
+    try {
+      final temp = _sensorData.last['temperature'];
+      return temp != null ? double.tryParse(temp.toString()) : null;
+    } catch (e) {
+      debugPrint('Error getting latest temperature: $e');
+      return null;
+    }
+  }
+
+  // Get latest humidity reading
+  double? getLatestHumidity() {
+    if (_sensorData.isEmpty) return null;
+    try {
+      final humidity = _sensorData.last['humidity'];
+      return humidity != null ? double.tryParse(humidity.toString()) : null;
+    } catch (e) {
+      debugPrint('Error getting latest humidity: $e');
+      return null;
+    }
   }
 
   @override

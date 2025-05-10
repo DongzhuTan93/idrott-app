@@ -280,7 +280,7 @@ samples, guidance on mobile development, and a full API reference.
 
 For ESP32 development, refer to [ESP32 documentation](https://docs.espressif.com/projects/esp-idf/en/latest/).
 
-**Important Notes:**
+**!! Important Notes:**
 - Your computer and phone **must** be on the same WiFi network for this to work.
 - Different WiFi networks will not work, as they typically have separate subnets and firewalls.
 - **Re-establishing Connection**: You will need to connect your device via USB and repeat steps 1-8 if:
