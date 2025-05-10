@@ -10,6 +10,21 @@ This project focuses on developing a mobile app for measuring strength using the
 
 ![IMTP App Home Page](image/Imtp-app.png)
 
+## Test Selection Feature
+
+The application now includes a test selection screen that allows users to choose between different test types:
+
+- **IMTP**: Isometric Mid-thigh Pull test
+- **Iso squat**: Isometric Squat test
+- **Bench press**: Bench Press test
+- **Custom**: Custom configured tests
+
+This feature enables trainers and athletes to run specific tests tailored to their training needs. The test results are displayed in real-time through the IoT dashboard.
+
+### Feature Demo
+
+![Test Selection Demo](video/test-selection-demo.mp4)
+
 ## Key Features
 
 - **Real-time IoT Data Monitoring**: View sensor data from connected devices in real-time
@@ -18,6 +33,7 @@ This project focuses on developing a mobile app for measuring strength using the
 - **Administrative Tools**: User management interface for coaches/administrators
 - **MQTT Integration**: Reliable communication protocol for IoT devices
 - **Wireless Communication (WiFi)**: The microcontroller transmits the processed data to the mobile app.
+- **Multiple Test Types**: Support for various strength tests including IMTP, Iso squat, and Bench press
 
 ## System Components
 
