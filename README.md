@@ -10,14 +10,42 @@ This project focuses on developing a mobile app for measuring strength using the
 
 ![IMTP App Home Page](image/Imtp-app.png)
 
+## Test Selection Feature
+
+The application now includes a comprehensive test selection system that allows users to choose between different types of strength tests. From the user profile screen, athletes or trainers can tap the "RUN TEST" button which navigates to a dedicated test selection screen:
+
+### Available Tests
+
+- **IMTP (Isometric Mid-thigh Pull)**: Measures maximal force production in the mid-thigh position
+- **Iso squat**: Evaluates isometric strength in the squat position, useful for lower body assessment
+- **Bench press**: Measures upper body pressing strength
+- **Custom**: Allows for custom-configured testing protocols based on specific requirements
+
+Each test option takes the user to the same dashboard interface but configures the system to record and display data specific to the selected test type. The test type is clearly displayed in the dashboard interface to ensure users know which protocol is being measured.
+
+### User Experience Flow
+
+1. User logs in and navigates to a user profile
+2. User taps "RUN TEST" button
+3. Choose Test screen appears with the different test options
+4. User selects the desired test type
+5. Test dashboard launches with the appropriate configuration
+6. Real-time data from sensors is displayed specific to the selected test
+
+This flexible design allows coaches and athletes to perform multiple types of strength assessments with the same equipment setup, enhancing the versatility of the system.
+
+
 ## Key Features
 
 - **Real-time IoT Data Monitoring**: View sensor data from connected devices in real-time
 - **Historical Data Analysis**: Visualize performance trends over time
-- **Bluetooth Device Management**: Connect directly to nearby sensors
 - **User Authentication**: Secure login and account management
 - **Administrative Tools**: User management interface for coaches/administrators
 - **MQTT Integration**: Reliable communication protocol for IoT devices
+- **Wireless Communication (WiFi)**: The microcontroller transmits the processed data to the mobile app.
+- **Multiple Test Types**: Support for various strength tests including IMTP, Iso squat, and Bench press
+- **Consistent User Interface**: Unified dark theme with green accents throughout the application
+- **Responsive Design**: Adapts to different screen sizes and orientations
 
 ## System Components
 
