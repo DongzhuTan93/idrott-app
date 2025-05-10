@@ -100,7 +100,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                               ),
                               const SizedBox(height: 30),
                               PrimaryButton(
-                                text: 'RUN TEST',
+                                text: 'Demo MQTT Connection',
                                 width: double.infinity,
                                 onPressed:
                                     () => Navigator.pushNamed(
