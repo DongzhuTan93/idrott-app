@@ -151,18 +151,21 @@ For a cable-free development experience:
    ```
    adb tcpip 5555
    ```
-   
+
+**For Android Wireless Connection:**
+
 5. Get your device's IP address:
    ```
-   adb shell ip addr show wlan0 | grep "inet " | cut -d' ' -f6 | cut -d'/' -f1
+   adb shell ip route | grep wlan
    ```
-   This will display an IP address like `192.168.1.138`
+   This will show output like: `192.168.1.0/24 dev wlan0 proto kernel scope link src 192.168.1.100`
+   Your device IP is the number after `src` (in this example: `192.168.1.100`)
    
 6. Connect to your device wirelessly:
    ```
-   adb connect YOUR_DEVICE_IP:5555
+   adb connect <YOUR_PHONE_IP>:5555
    ```
-   For example: `adb connect 192.168.1.138:5555`
+   For example: `adb connect 192.168.1.100:5555`
    
 7. Verify the connection:
    ```
@@ -170,17 +173,17 @@ For a cable-free development experience:
    ```
    You should see your device listed with its IP address
    
-8. Disconnect the USB cable and run your app:
+8. Disconnect the USB cable and run your app using the IP address:
    ```
-   flutter run
+   flutter run -d <YOUR_PHONE_IP>:5555
    ```
+   For example: `flutter run -d 192.168.1.100:5555`
 
-**Important Notes:**
-- Your computer and phone **must** be on the same WiFi network for this to work
-- Different WiFi networks will not work, as they typically have separate subnets and firewalls
-- If you restart your development session, simply run `flutter run` again
-- If the IP address changes (different WiFi, router reboot, etc.), repeat steps 1-7
-- Bluetooth is not supported for Flutter debugging, only WiFi
+**Alternative method to get IP:**
+   ```
+   adb shell ip addr show wlan0 | grep "inet " | cut -d' ' -f6 | cut -d'/' -f1
+   ```
+   This will display an IP address like `192.168.1.100`
 
 #### Option 2: Android Devices (USB Connection)
 
@@ -238,21 +241,26 @@ For a cable-free development experience:
    Samsung Galaxy S22 (mobile)    • ef5678gh              • android-arm64 • Android 12 (API 31)
    iPhone 13 Pro (mobile)         • 00001111-AAAA2222     • ios           • iOS 15.5
    macOS (desktop)                • macos                 • darwin-arm64  • macOS 12.4
+   Android (wireless)             • 192.168.1.100:5555    • android-arm64 • Android 13 (API 33)
    ```
 
-5. Run the app on a connected device by ID 
+5. Run the app on a connected device by ID (works for both USB and wireless connections)
    ```
    flutter run -d <device_id>
    ```
-   For example:
+   Examples:
    ```
-   flutter run -d a1b2c3d4    (Pixel 6 (mobile))
+   flutter run -d a1b2c3d4               # USB connected Android device
+   flutter run -d 192.168.1.100:5555     # Wirelessly connected Android device
+   flutter run -d 00001111-AAAA2222      # USB connected iPhone
    ```
 
-6. Or simply run on the default connected device
+6. Or simply run on the default connected device (USB or wireless)
    ```
    flutter run
    ```
+
+**Note:** Steps 5-6 work for both USB and wireless connections. For wireless Android connections, your device ID will be in the format `IP_ADDRESS:5555` (e.g., `192.168.1.100:5555`).
 
 ### Troubleshooting Device Connection
 
