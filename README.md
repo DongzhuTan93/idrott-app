@@ -128,91 +128,15 @@ lib/
 - Physical Android or iOS device for testing
 - ESP32 microcontroller (for hardware integration)
 
-### Connecting a Physical Device
+### Device Setup
 
-There are two options for connecting your device for development:
+For detailed instructions on running the app on physical devices or simulators, see **[DEVICE_SETUP.md](DEVICE_SETUP.md)**.
 
-1. **Wireless Connection (WiFi)** - Allows for cable-free development
-2. **Wired Connection (USB)** - Traditional, reliable connection method
-
-Choose the method that best suits your needs.
-
-#### Option 1: Wireless Debugging (WiFi)
-
-For a cable-free development experience:
-
-1. First, connect your device via USB cable (required only for initial setup)
-   
-2. Enable Developer options and USB debugging as described in the Android section below
-   
-3. **Make sure your computer and phone are connected to the same WiFi network**
-   
-4. Put your Android device in TCP/IP mode:
-   ```
-   adb tcpip 5555
-   ```
-
-**For Android Wireless Connection:**
-
-5. Get your device's IP address:
-   ```
-   adb shell ip route | grep wlan
-   ```
-   This will show output like: `192.168.1.0/24 dev wlan0 proto kernel scope link src 192.168.1.100`
-   Your device IP is the number after `src` (in this example: `192.168.1.100`)
-   
-6. Connect to your device wirelessly:
-   ```
-   adb connect <YOUR_PHONE_IP>:5555
-   ```
-   For example: `adb connect 192.168.1.100:5555`
-   
-7. Verify the connection:
-   ```
-   adb devices
-   ```
-   You should see your device listed with its IP address
-   
-8. Disconnect the USB cable and run your app using the IP address:
-   ```
-   flutter run -d <YOUR_PHONE_IP>:5555
-   ```
-   For example: `flutter run -d 192.168.1.100:5555`
-
-**Alternative method to get IP:**
-   ```
-   adb shell ip addr show wlan0 | grep "inet " | cut -d' ' -f6 | cut -d'/' -f1
-   ```
-   This will display an IP address like `192.168.1.100`
-
-#### Option 2: Android Devices (USB Connection)
-
-1. Enable Developer options on your device:
-   - Go to **Settings** > **About phone** (location may vary by manufacturer)
-   - Tap **Build number** 7 times until you see "You are now a developer!"
-
-2. Enable USB debugging:
-   - Go to **Settings** > **Developer options** (may be under Additional Settings on some devices)
-   - Turn on **USB debugging**
-   - On some devices, you may need to enable **Install via USB** option
-   - Some manufacturer UIs (like MIUI on Xiaomi) may require disabling UI optimizations for development
-
-3. Connect your device via USB cable to your computer
-
-4. If prompted on your device, allow USB debugging
-
-5. For devices that show installation errors like "INSTALL_FAILED_USER_RESTRICTED":
-   - Check your device's permission settings
-   - Look for **Install via USB** options in **Settings** > **Apps** > **Permissions**
-   - Different manufacturers place these settings in various locations
-   - Check manufacturer-specific documentation if needed
-
-#### iOS Devices
-
-1. Connect your iOS device to your Mac
-2. Open Xcode and navigate to Window > Devices and Simulators
-3. Select your device and make sure it's recognized
-4. In your Flutter project, ensure you have a valid iOS Developer account set up in Xcode
+The device setup guide covers:
+- iOS Simulator setup
+- Android and iPhone physical device connection (USB and wireless)
+- iOS code signing setup (see **[IOS_CODE_SIGNING.md](IOS_CODE_SIGNING.md)** for detailed guide)
+- Troubleshooting common connection issues
 
 ### Running the App
 
@@ -231,47 +155,18 @@ For a cable-free development experience:
    flutter pub get
    ```
 
-4. Find connected devices
-   ```
-   flutter devices
-   ```
-   This will show a list of connected devices with their IDs, for example:
-   ```
-   Pixel 6 (mobile)               • a1b2c3d4              • android-arm64 • Android 12 (API 31)
-   Samsung Galaxy S22 (mobile)    • ef5678gh              • android-arm64 • Android 12 (API 31)
-   iPhone 13 Pro (mobile)         • 00001111-AAAA2222     • ios           • iOS 15.5
-   macOS (desktop)                • macos                 • darwin-arm64  • macOS 12.4
-   Android (wireless)             • 192.168.1.100:5555    • android-arm64 • Android 13 (API 33)
-   ```
-
-5. Run the app on a connected device by ID (works for both USB and wireless connections)
-   ```
-   flutter run -d <device_id>
-   ```
-   Examples:
-   ```
-   flutter run -d a1b2c3d4               # USB connected Android device
-   flutter run -d 192.168.1.100:5555     # Wirelessly connected Android device
-   flutter run -d 00001111-AAAA2222      # USB connected iPhone
-   ```
-
-6. Or simply run on the default connected device (USB or wireless)
+4. Run the app
    ```
    flutter run
    ```
+   
+   To run on a specific device:
+   ```
+   flutter devices  # List available devices
+   flutter run -d <device_id>  # Run on specific device
+   ```
 
-**Note:** Steps 5-6 work for both USB and wireless connections. For wireless Android connections, your device ID will be in the format `IP_ADDRESS:5555` (e.g., `192.168.1.100:5555`).
-
-### Troubleshooting Device Connection
-
-If your device is not showing up when running `flutter devices`:
-
-1. Ensure USB debugging is enabled
-2. Try disconnecting and reconnecting the USB cable
-3. Try a different USB cable or port
-4. Run `flutter doctor` to diagnose issues
-5. For Android, install appropriate USB drivers for your device
-6. Restart both your computer and device
+For troubleshooting device connection issues, see the **[Device Setup Guide](DEVICE_SETUP.md#troubleshooting)**.
 
 ### Setting Up a Development Environment in Cursor
 
@@ -305,17 +200,4 @@ samples, guidance on mobile development, and a full API reference.
 
 For ESP32 development, refer to [ESP32 documentation](https://docs.espressif.com/projects/esp-idf/en/latest/).
 
-**!! Important Notes:**
-- Your computer and phone **must** be on the same WiFi network for this to work.
-- Different WiFi networks will not work, as they typically have separate subnets and firewalls.
-- **Re-establishing Connection**: You will need to connect your device via USB and repeat steps 1-8 if:
-    - You start a new development session.
-    - Your device's IP address changes (e.g., due to connecting to a new WiFi network or a router reboot).
-    - Your device or computer restarts.
-    - The ADB server restarts.
-- Once the wireless connection is active, you can disconnect the USB cable. If the connection remains stable (same WiFi, no restarts), you can simply use `flutter run` for subsequent builds in the same session.
-- If you restart your development session, simply run `flutter run` again
-- If the IP address changes (different WiFi, router reboot, etc.), repeat steps 1-7
-- Bluetooth is not supported for Flutter debugging; this setup uses WiFi only.
-
-#### Option 2: Android Devices (USB Connection)
+For detailed device setup instructions, see **[DEVICE_SETUP.md](DEVICE_SETUP.md)**.
