@@ -50,7 +50,7 @@ open ios/Runner.xcworkspace
 ## **Part 3: Code Signing Settings**
 
 ### **Step 6: Enable Automatic Signing**
-- ✅ Check **"Automatically manage signing"**
+- Check **"Automatically manage signing"**
 - This lets Xcode handle certificates automatically
 
 ### **Step 7: Select Team**

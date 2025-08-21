@@ -17,7 +17,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _isTestUser = true;
+  final bool _isTestUser = true;
 
   @override
   void dispose() {

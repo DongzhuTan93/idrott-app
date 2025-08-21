@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../components/back_button.dart';
 import '../../components/primary_button.dart';
 import '../../theme/colors.dart';
+import '../../models/user.dart';
+import '../user_test_dashboard.dart';
 
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
@@ -100,13 +102,27 @@ class _AdminDashboardState extends State<AdminDashboard> {
                               ),
                               const SizedBox(height: 30),
                               PrimaryButton(
-                                text: 'Demo MQTT Connection',
+                                text: 'IMTP Test (Quick Access)',
                                 width: double.infinity,
-                                onPressed:
-                                    () => Navigator.pushNamed(
-                                      context,
-                                      '/iot-dashboard',
+                                onPressed: () {
+                                  // Direct access to IMTP testing
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (context) => UserTestDashboard(
+                                            user: User(
+                                              id: 'admin',
+                                              username: 'JESPER',
+                                              email: 'admin@test.com',
+                                              isAdmin: true,
+                                              createdAt: DateTime.now(),
+                                            ),
+                                            testType: 'IMTP',
+                                          ),
                                     ),
+                                  );
+                                },
                               ),
 
                               const Spacer(),

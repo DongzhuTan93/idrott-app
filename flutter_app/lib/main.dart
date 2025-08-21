@@ -8,10 +8,9 @@ import 'screens/admin/admin_dashboard.dart';
 import 'screens/admin/add_user_screen.dart';
 import 'screens/admin/user_list_screen.dart';
 import 'screens/iot_dashboard.dart';
-import 'screens/add_user_success_screen.dart';
 import 'screens/user_profile_screen.dart';
-import 'screens/user_test_dashboard.dart';
 import 'services/mqtt_service.dart';
+import 'services/loadcell_api_service.dart';
 
 // Custom HTTP overrides to handle certificate issues - only for native platforms
 class MyHttpOverrides extends io.HttpOverrides {
@@ -29,7 +28,10 @@ void main() {
 
   runApp(
     MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => MqttService())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => MqttService()),
+        ChangeNotifierProvider(create: (_) => LoadcellApiService()),
+      ],
       child: const IdrrottApp(),
     ),
   );

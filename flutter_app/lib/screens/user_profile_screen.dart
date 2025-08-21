@@ -6,7 +6,7 @@ import 'choose_test_screen.dart';
 class UserProfileScreen extends StatelessWidget {
   final User user;
 
-  const UserProfileScreen({Key? key, required this.user}) : super(key: key);
+  const UserProfileScreen({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {

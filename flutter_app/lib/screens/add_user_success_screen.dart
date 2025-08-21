@@ -5,7 +5,7 @@ import '../models/user.dart';
 class AddUserSuccessScreen extends StatelessWidget {
   final User user;
 
-  const AddUserSuccessScreen({Key? key, required this.user}) : super(key: key);
+  const AddUserSuccessScreen({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {

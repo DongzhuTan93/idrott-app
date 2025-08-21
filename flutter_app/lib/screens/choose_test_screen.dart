@@ -6,7 +6,7 @@ import 'user_test_dashboard.dart';
 class ChooseTestScreen extends StatelessWidget {
   final User user;
 
-  const ChooseTestScreen({Key? key, required this.user}) : super(key: key);
+  const ChooseTestScreen({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
