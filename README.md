@@ -8,7 +8,7 @@ This project focuses on developing a mobile app for measuring strength using the
 
 ## Application Home Page
 
-![IMTP App Home Page](image/Imtp-app.png)
+![IMTP App Home Page](flutter_app/image/Imtp-app.png)
 
 ## Test Selection Feature
 
@@ -47,7 +47,7 @@ Each test option takes the user to the same dashboard interface but configures t
 
 Below is a basic diagram illustrating the load cell setup:
 
-![Load Cell Basics](image/LoadCellBasics.png)
+![Load Cell Basics](flutter_app/image/LoadCellBasics.png)
 
 ### Firmware Development
 
