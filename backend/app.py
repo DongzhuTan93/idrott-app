@@ -126,13 +126,15 @@ def get_status():
 @app.route('/api/start_test', methods=['POST'])
 def start_test():
     """Start a new test session"""
-    global is_testing, current_session_data
+    global is_testing, current_session_data, session_start_time, sample_counter
     
     if len(esp_clients) == 0:
         return jsonify({'error': 'No ESP32 device connected'}), 400
     
     is_testing = True
     current_session_data = []
+    session_start_time = datetime.now()
+    sample_counter = 0
     
     # Create new CSV file for this test session
     csv_file = create_csv_file()
@@ -141,6 +143,10 @@ def start_test():
     send_command_to_esp32('start')
     
     logger.info(f"Test started via API - CSV file: {csv_file}")
+    print(f"\n=== LOAD CELL TEST STARTED ===")
+    print(f"Start Time: {session_start_time.strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"CSV File: {os.path.basename(csv_file)}")
+    print("=====================================\n")
     
     # Note: WebSocket clients get data automatically via raw WebSocket
     
@@ -153,19 +159,32 @@ def start_test():
 @app.route('/api/stop_test', methods=['POST'])
 def stop_test():
     """Stop the current test session"""
-    global is_testing
+    global is_testing, session_start_time
     
     if len(esp_clients) == 0:
         return jsonify({'error': 'No ESP32 device connected'}), 400
     
     is_testing = False
     
-    # Send stop command to ESP32 devices via Socket.IO
+    # Send stop command to ESP32 devices via Raw WebSocket
     send_command_to_esp32('stop')
+    
+    # Show final session info
+    if session_start_time:
+        from datetime import datetime
+        session_end_time = datetime.now()
+        duration = session_end_time - session_start_time
+        
+        print(f"\n=== LOAD CELL TEST STOPPED ===")
+        print(f"End Time: {session_end_time.strftime('%Y-%m-%d %H:%M:%S')}")
+        print(f"Duration: {duration}")
+        print(f"Total Samples: {sample_counter}")
+        if current_csv_file:
+            print(f"CSV File: {os.path.basename(current_csv_file)}")
+        print("===============================\n")
     
     logger.info(f"Test stopped via API - Samples collected: {len(current_session_data)}")
     
-    # Notify all connected clients
     # Note: WebSocket clients get updates automatically via raw WebSocket
     
     return jsonify({
@@ -311,24 +330,20 @@ def websocket_handler(ws):
                     client_type = data['type']
                     if client_type == 'esp32':
                         esp_clients.add(ws)
-                        logger.info("ESP32 connected")
+                        logger.info("ESP32 connected - Waiting for frontend to start test")
                         
-                        # Initialize session tracking and CSV file
+                        # Don't create CSV file yet - wait for frontend command
                         global session_start_time, sample_counter, current_csv_file
-                        from datetime import datetime
-                        session_start_time = datetime.now()
-                        sample_counter = 0  # Reset counter for new session
+                        session_start_time = None
+                        sample_counter = 0
+                        current_csv_file = None
                         
-                        # Create CSV file for this session
-                        csv_file = create_csv_file()
-                        
-                        print(f"\n=== LOAD CELL SESSION STARTED ===")
-                        print(f"Start Time: {session_start_time.strftime('%Y-%m-%d %H:%M:%S')}")
+                        print(f"\n=== ESP32 CONNECTED ===")
                         print(f"Device: ESP32 Load Cell (ADS1220)")
-                        print(f"CSV File: {os.path.basename(csv_file)}")
-                        print("=====================================\n")
+                        print(f"Status: Waiting for frontend to start test")
+                        print(f"=====================================\n")
                         
-                        ws.send('{"status":"registered","type":"esp32"}')
+                        ws.send('{"status":"registered","type":"esp32","message":"Waiting for test start command"}')
                     elif client_type == 'flutter':
                         flutter_clients.add(ws)
                         logger.info("Flutter connected") 
@@ -398,7 +413,7 @@ def send_command_to_esp32_websocket(command):
 
 def handle_esp32_data(data, ws):
     """Handle sensor data from ESP32"""
-    global latest_readings, current_session_data
+    global latest_readings, current_session_data, sample_counter
     
     try:
         if 'samples' in data:
@@ -421,22 +436,20 @@ def handle_esp32_data(data, ws):
                     'esp32_time': sample.get('t', 0)  # Alternative key for consistency
                 }
                 
-                # Save EVERY individual sample to CSV immediately
-                save_to_csv(sample_for_csv)
-                
-                # Also add to session data for API access
-                current_session_data.append(latest_readings.copy())
-                
-                # Additional handling if in explicit testing mode
-                if is_testing:
-                    # Add any special testing logic here if needed
+                # Only save to CSV and session data when test is running
+                if is_testing and current_csv_file:
+                    save_to_csv(sample_for_csv)
+                    current_session_data.append(latest_readings.copy())
+                    sample_counter += 1
+                else:
+                    # Just update latest readings for display
                     pass
             
             # Forward to Raw WebSocket Flutter clients
             forward_to_websocket_clients(data, exclude_sender=ws)
             
-            # Show data in same format as CSV file
-            if samples:
+            # Show data in same format as CSV file ONLY when test is running
+            if is_testing and samples:
                 from datetime import datetime
                 for sample in samples[:5]:  # Show first 5 samples like CSV format
                     precise_timestamp = datetime.now().isoformat() + 'Z'

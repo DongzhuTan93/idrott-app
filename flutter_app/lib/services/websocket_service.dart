@@ -145,6 +145,14 @@ class WebSocketService with ChangeNotifier {
     }
   }
 
+  /// Send generic command via WebSocket
+  void sendCommand(String command) {
+    if (_isConnected) {
+      _channel?.sink.add(jsonEncode({'cmd': command}));
+      debugPrint('Sent command via WebSocket: $command');
+    }
+  }
+
   /// Get readings from the last N seconds
   List<Map<String, dynamic>> getReadingsFromLast(int seconds) {
     final cutoffTime = DateTime.now().millisecondsSinceEpoch - (seconds * 1000);

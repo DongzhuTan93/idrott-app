@@ -83,6 +83,32 @@ class _IoTDashboardState extends State<IoTDashboard> {
         child: ListView(
           padding: const EdgeInsets.all(16.0),
           children: [
+            // Navigation to Real-time Dashboard
+            Container(
+              margin: const EdgeInsets.only(bottom: 20),
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/realtime-loadcell');
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 16,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                icon: const Icon(Icons.sensors, size: 24),
+                label: const Text(
+                  'Open Real-time Loadcell Dashboard',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+
             const Text(
               'Sensor Readings',
               style: TextStyle(

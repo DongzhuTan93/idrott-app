@@ -8,6 +8,7 @@ import 'screens/admin/admin_dashboard.dart';
 import 'screens/admin/add_user_screen.dart';
 import 'screens/admin/user_list_screen.dart';
 import 'screens/iot_dashboard.dart';
+import 'screens/realtime_loadcell_dashboard.dart';
 import 'screens/user_profile_screen.dart';
 import 'services/mqtt_service.dart';
 import 'services/loadcell_api_service.dart';
@@ -58,6 +59,7 @@ class IdrrottApp extends StatelessWidget {
         '/admin/add-user': (context) => const AddUserScreen(),
         '/admin/users': (context) => const UserListScreen(),
         '/iot-dashboard': (context) => const IoTDashboard(),
+        '/realtime-loadcell': (context) => const RealtimeLoadcellDashboard(),
         '/user-profile':
             (context) => UserProfileScreen(
               user: ModalRoute.of(context)!.settings.arguments as dynamic,

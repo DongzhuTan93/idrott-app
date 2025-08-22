@@ -87,3 +87,15 @@ Access the web dashboard at `http://localhost:5000` to:
 - Start/stop tests
 - View real-time sensor readings
 - See data transmission logs
+
+## Test Data Management
+
+Delete CSV files from test_data directory:
+
+```bash
+# Delete all CSV files
+rm -rf test_data/*.csv
+
+# Delete specific CSV file
+rm test_data/imtp_test_20250822_102524.csv
+```

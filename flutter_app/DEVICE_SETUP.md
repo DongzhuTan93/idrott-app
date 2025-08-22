@@ -39,7 +39,7 @@ flutter devices
 # Example output: iPhone 16 Pro Max (mobile) • 40570266-8531-471B-8515-D889A7A6E2DF • ios
 
 # Step 2: Run with specific device ID  
-flutter run -d 40570266-8531-471B-8515-D889A7A6E2DF
+flutter run -d 40570266-8531-471B-8515-D889A7A6E2DF (Change to your devices ID)
 ```
 
 ## Physical Devices
